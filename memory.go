@@ -1,6 +1,7 @@
 package xlsx
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -71,6 +72,24 @@ func (mcs *MemoryCellStore) MoveRow(r *Row, index int) error {
 // move any following rows, leaving this decision to the user.
 func (mcs *MemoryCellStore) RemoveRow(key string) error {
 	delete(mcs.rows, key)
+	return nil
+}
+
+func (mcs *MemoryCellStore) SwapRows(first, second string) error {
+	fRow, ok := mcs.rows[first]
+	if !ok {
+		return errors.New("SwapRows: first row not found")
+	}
+
+	sRow, ok := mcs.rows[second]
+	if !ok {
+		return errors.New("SwapRows: first row not found")
+	}
+
+	fRow.num, sRow.num = sRow.num, fRow.num
+
+	mcs.rows[fRow.key()] = fRow
+	mcs.rows[sRow.key()] = sRow
 	return nil
 }
 

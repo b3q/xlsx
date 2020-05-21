@@ -111,6 +111,10 @@ func (cs *DiskVCellStore) RemoveRow(key string) error {
 	return cs.store.Erase(key)
 }
 
+func (cs *DiskVCellStore) SwapRows(first, second string) error {
+	return errors.New("DiskVCellStore.SwapRows: not implemented")
+}
+
 // Close will remove the persisant storage for a given Sheet completely.
 func (cs *DiskVCellStore) Close() error {
 	return os.RemoveAll(cs.baseDir)

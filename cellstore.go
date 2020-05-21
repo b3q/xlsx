@@ -18,6 +18,7 @@ type CellStore interface {
 	WriteRow(r *Row) error
 	MoveRow(r *Row, newIndex int) error
 	RemoveRow(key string) error
+	SwapRows(first, second string) error
 	Close() error
 }
 

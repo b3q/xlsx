@@ -227,27 +227,28 @@ func (s *Sheet) AddRowAtIndex(index int) (*Row, error) {
 	return row, nil
 }
 
-func (s *Sheet) SwapRows(first, second int) error {
-	if first < 0 || first > s.MaxRow ||
-		second < 0 || second > s.MaxRow {
+// Swaps the rows by their indexes
+func (s *Sheet) SwapRows(firstIndex, secondIndex int) error {
+	if firstIndex < 0 || firstIndex > s.MaxRow ||
+		secondIndex < 0 || secondIndex > s.MaxRow {
 		return errors.New("SwapRows: index out of bounds")
 	}
 
 	if s.currentRow != nil {
-		if s.currentRow.num == first ||
-			s.currentRow.num == second {
+		if s.currentRow.num == firstIndex ||
+			s.currentRow.num == secondIndex {
 			if err := s.cellStore.WriteRow(s.currentRow); err != nil {
 				return err
 			}
 		}
 	}
 
-	firstRow, err := s.cellStore.ReadRow(makeRowKey(s, first))
+	firstRow, err := s.cellStore.ReadRow(makeRowKey(s, firstIndex))
 	if err != nil {
 		return err
 	}
 
-	secondRow, err := s.cellStore.ReadRow(makeRowKey(s, second))
+	secondRow, err := s.cellStore.ReadRow(makeRowKey(s, secondIndex))
 	if err != nil {
 		return err
 	}

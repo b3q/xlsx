@@ -55,25 +55,16 @@ func (r *Row) GetOutlineLevel() uint8 {
 // AddCell adds a new Cell to the Row
 func (r *Row) AddCell() *Cell {
 	cell := newCell(r, r.cellCount)
-	if r.cellsStyle != nil {
-		cell.SetStyle(r.cellsStyle)
-	}
+	cell.SetStyle(r.cellsStyle)
 	r.cellCount++
 	r.cells = append(r.cells, cell)
 	return cell
 }
 
-func (r *Row) WithStyle(style *Style, fn func(row *Row)) *Row {
-	prev := r.cellsStyle
+// SetStyle sets the default cell style
+func (r *Row) SetStyle(style *Style) *Row {
 	r.cellsStyle = style
-	fn(r)
-	r.cellsStyle = prev
 	return r
-}
-
-// AddCellV alias for AddCell().SetValue(value)
-func (r *Row) AddCellV(value interface{}) *Cell {
-	return r.AddCell().SetValue(value)
 }
 
 func (r *Row) makeCellKey(colIdx int) string {

@@ -472,7 +472,7 @@ func TestSheet(t *testing.T) {
 		f := NewFile(UseDiskVCellStore)
 		sheet, _ := f.AddSheet("Sheet1")
 		for i := 0; i < 10; i++ {
-			sheet.AddRow().AddCellV(i + 1)
+			sheet.AddRow().AddCell().SetInt(i + 1)
 		}
 
 		i := 0

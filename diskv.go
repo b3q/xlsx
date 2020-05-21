@@ -111,6 +111,7 @@ func (cs *DiskVCellStore) RemoveRow(key string) error {
 	return cs.store.Erase(key)
 }
 
+// SwapRows swaps the rows
 func (cs *DiskVCellStore) SwapRows(first, second *Row) error {
 	// if err := cs.store.Erase(first.key()); err != nil {
 	// 	return err

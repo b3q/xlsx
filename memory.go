@@ -74,6 +74,7 @@ func (mcs *MemoryCellStore) RemoveRow(key string) error {
 	return nil
 }
 
+// SwapRows swaps the rows
 func (mcs *MemoryCellStore) SwapRows(first, second *Row) error {
 	first.num, second.num = second.num, first.num
 

@@ -227,6 +227,34 @@ func (s *Sheet) AddRowAtIndex(index int) (*Row, error) {
 	return row, nil
 }
 
+// Swaps the rows by their indexes
+func (s *Sheet) SwapRows(firstIndex, secondIndex int) error {
+	if firstIndex < 0 || firstIndex > s.MaxRow ||
+		secondIndex < 0 || secondIndex > s.MaxRow {
+		return errors.New("SwapRows: index out of bounds")
+	}
+
+	if s.currentRow != nil {
+		if s.currentRow.num == firstIndex ||
+			s.currentRow.num == secondIndex {
+			if err := s.cellStore.WriteRow(s.currentRow); err != nil {
+				return err
+			}
+		}
+	}
+
+	firstRow, err := s.cellStore.ReadRow(makeRowKey(s, firstIndex))
+	if err != nil {
+		return err
+	}
+
+	secondRow, err := s.cellStore.ReadRow(makeRowKey(s, secondIndex))
+	if err != nil {
+		return err
+	}
+	return s.cellStore.SwapRows(firstRow, secondRow)
+}
+
 // Add a DataValidation to a range of cells
 func (s *Sheet) AddDataValidation(dv *xlsxDataValidation) {
 	s.DataValidations = append(s.DataValidations, dv)

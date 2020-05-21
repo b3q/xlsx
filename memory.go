@@ -74,6 +74,15 @@ func (mcs *MemoryCellStore) RemoveRow(key string) error {
 	return nil
 }
 
+// SwapRows swaps the rows
+func (mcs *MemoryCellStore) SwapRows(first, second *Row) error {
+	first.num, second.num = second.num, first.num
+
+	mcs.rows[first.key()] = first
+	mcs.rows[second.key()] = second
+	return nil
+}
+
 // Extract the row key from a provided cell key
 func keyToRowKey(key string) string {
 	parts := strings.Split(key, ":")

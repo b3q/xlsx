@@ -14,18 +14,21 @@ type Row struct {
 	num          int     // Num hold the positional number of the Row in the Sheet
 	cellCount    int     // The current number of cells
 	cells        []*Cell // the cells
+	cellsStyle   *Style
 }
 
 // SetHeight sets the height of the Row in PostScript points
-func (r *Row) SetHeight(ht float64) {
+func (r *Row) SetHeight(ht float64) *Row {
 	r.height = ht
 	r.isCustom = true
+	return r
 }
 
 // SetHeightCM sets the height of the Row in centimetres, inherently converting it to PostScript points.
-func (r *Row) SetHeightCM(ht float64) {
+func (r *Row) SetHeightCM(ht float64) *Row {
 	r.height = ht * 28.3464567 // Convert CM to postscript points
 	r.isCustom = true
+	return r
 }
 
 // GetHeight returns the height of the Row in PostScript points.
@@ -34,13 +37,14 @@ func (r *Row) GetHeight() float64 {
 }
 
 // SetOutlineLevel sets the outline level of the Row (used for collapsing rows)
-func (r *Row) SetOutlineLevel(outlineLevel uint8) {
+func (r *Row) SetOutlineLevel(outlineLevel uint8) *Row {
 	r.outlineLevel = outlineLevel
 	if r.Sheet != nil {
 		if r.outlineLevel > r.Sheet.SheetFormat.OutlineLevelRow {
 			r.Sheet.SheetFormat.OutlineLevelRow = outlineLevel
 		}
 	}
+	return r
 }
 
 // GetOutlineLevel returns the outline level of the Row.
@@ -51,9 +55,21 @@ func (r *Row) GetOutlineLevel() uint8 {
 // AddCell adds a new Cell to the Row
 func (r *Row) AddCell() *Cell {
 	cell := newCell(r, r.cellCount)
+	if r.cellsStyle != nil {
+		cell.SetStyle(r.cellsStyle)
+	}
 	r.cellCount++
 	r.cells = append(r.cells, cell)
 	return cell
+}
+
+// WithStyle writes cells with the given style.
+func (r *Row) WithStyle(style *Style, fn func(row *Row)) {
+	r.cellsStyle = style
+	if fn != nil {
+		fn(r)
+	}
+	r.cellsStyle = nil
 }
 
 func (r *Row) makeCellKey(colIdx int) string {

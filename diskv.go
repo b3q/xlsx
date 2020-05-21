@@ -111,6 +111,42 @@ func (cs *DiskVCellStore) RemoveRow(key string) error {
 	return cs.store.Erase(key)
 }
 
+// SwapRows swaps the rows
+func (cs *DiskVCellStore) SwapRows(first, second *Row) error {
+	// if err := cs.store.Erase(first.key()); err != nil {
+	// 	return err
+	// }
+	// if err := cs.store.Erase(second.key()); err != nil {
+	// 	return err
+	// }
+	first.num, second.num = second.num, first.num
+
+	if err := cs.WriteRow(first); err != nil {
+		return err
+	}
+
+	if err := cs.WriteRow(second); err != nil {
+		return err
+	}
+	// cs.buf.Reset()
+	// if err := cs.writeRow(firstRow); err != nil {
+	// 	return err
+	// }
+	// if err := cs.store.WriteStream(firstRow.key(), cs.buf, true); err != nil {
+	// 	return err
+	// }
+
+	// cs.buf.Reset()
+	// if err := cs.writeRow(secondRow); err != nil {
+	// 	return err
+	// }
+	// if err := cs.store.WriteStream(secondRow.key(), cs.buf, true); err != nil {
+	// 	return err
+	// }
+
+	return nil
+}
+
 // Close will remove the persisant storage for a given Sheet completely.
 func (cs *DiskVCellStore) Close() error {
 	return os.RemoveAll(cs.baseDir)

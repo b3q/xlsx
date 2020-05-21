@@ -6,6 +6,7 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -467,6 +468,33 @@ func TestSheet(t *testing.T) {
 		c.Assert(xSheet.AutoFilter.Ref, qt.Equals, "B2:C3")
 	})
 
+	csRunO(c, "TestSwapRows", func(c *qt.C, option FileOption) {
+		f := NewFile(UseDiskVCellStore)
+		sheet, _ := f.AddSheet("Sheet1")
+		for i := 0; i < 10; i++ {
+			sheet.AddRow().AddCell().SetInt(i + 1)
+		}
+
+		i := 0
+		j := sheet.MaxRow - 1
+		for i < j {
+			if err := sheet.SwapRows(i, j); err != nil {
+				c.Error(err)
+			}
+			i++
+			j--
+		}
+
+		i = 10
+		sheet.ForEachRow(func(r *Row) error {
+			r.ForEachCell(func(cell *Cell) error {
+				c.Assert(cell.Value, qt.Equals, strconv.Itoa(i))
+				i--
+				return nil
+			})
+			return nil
+		})
+	})
 }
 
 func TestMakeXLSXSheet(t *testing.T) {

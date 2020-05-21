@@ -63,11 +63,12 @@ func (r *Row) AddCell() *Cell {
 	return cell
 }
 
-func (r *Row) WithStyle(style *Style, fn func(r *Row)) {
+func (r *Row) WithStyle(style *Style, fn func(row *Row)) *Row {
 	prev := r.cellsStyle
 	r.cellsStyle = style
 	fn(r)
 	r.cellsStyle = prev
+	return r
 }
 
 // AddCellV alias for AddCell().SetValue(value)

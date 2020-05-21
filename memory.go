@@ -74,21 +74,11 @@ func (mcs *MemoryCellStore) RemoveRow(key string) error {
 	return nil
 }
 
-func (mcs *MemoryCellStore) SwapRows(first, second string) error {
-	fRow, ok := mcs.rows[first]
-	if !ok {
-		return fmt.Errorf("SwapRows: row %s not found", first)
-	}
+func (mcs *MemoryCellStore) SwapRows(first, second *Row) error {
+	first.num, second.num = second.num, first.num
 
-	sRow, ok := mcs.rows[second]
-	if !ok {
-		return fmt.Errorf("SwapRows: row %s not found", second)
-	}
-
-	fRow.num, sRow.num = sRow.num, fRow.num
-
-	mcs.rows[fRow.key()] = fRow
-	mcs.rows[sRow.key()] = sRow
+	mcs.rows[first.key()] = first
+	mcs.rows[second.key()] = second
 	return nil
 }
 

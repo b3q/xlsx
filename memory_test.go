@@ -154,4 +154,39 @@ func TestMemoryCellStore(t *testing.T) {
 
 	})
 
+	c.Run("SwapRows", func(c *qt.C) {
+		memoryCs, err := NewMemoryCellStore()
+		c.Assert(err, qt.IsNil)
+		cs, ok := memoryCs.(*MemoryCellStore)
+		c.Assert(ok, qt.Equals, true)
+		defer cs.Close()
+
+		sheet, _ := NewFile().AddSheet("Sheet1")
+		row1 := sheet.AddRow()
+		row1.AddCell().SetString("1")
+		row1Key := row1.key()
+
+		row2 := sheet.AddRow()
+		row2.AddCell().SetString("2")
+		row2Key := row2.key()
+
+		err = cs.WriteRow(row1)
+		c.Assert(err, qt.IsNil)
+
+		err = cs.WriteRow(row2)
+		c.Assert(err, qt.IsNil)
+
+		err = cs.SwapRows(row1, row2)
+		c.Assert(err, qt.IsNil)
+
+		newRow1, err := cs.ReadRow(row1Key)
+		c.Assert(err, qt.IsNil)
+		c.Assert(newRow1.GetCell(0).Value, qt.Equals, row2.GetCell(0).Value)
+
+		newRow2, err := cs.ReadRow(row2Key)
+		c.Assert(err, qt.IsNil)
+		c.Assert(newRow2.GetCell(0).Value, qt.Equals, row1.GetCell(0).Value)
+
+	})
+
 }

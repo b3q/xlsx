@@ -469,7 +469,7 @@ func TestSheet(t *testing.T) {
 	})
 
 	csRunO(c, "TestSwapRows", func(c *qt.C, option FileOption) {
-		f := NewFile()
+		f := NewFile(UseDiskVCellStore)
 		sheet, _ := f.AddSheet("Sheet1")
 		for i := 0; i < 10; i++ {
 			sheet.AddRow().AddCellV(i + 1)

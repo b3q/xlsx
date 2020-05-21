@@ -242,10 +242,16 @@ func (s *Sheet) SwapRows(first, second int) error {
 		}
 	}
 
-	return s.cellStore.SwapRows(
-		makeRowKey(s, first),
-		makeRowKey(s, second),
-	)
+	firstRow, err := s.cellStore.ReadRow(makeRowKey(s, first))
+	if err != nil {
+		return err
+	}
+
+	secondRow, err := s.cellStore.ReadRow(makeRowKey(s, second))
+	if err != nil {
+		return err
+	}
+	return s.cellStore.SwapRows(firstRow, secondRow)
 }
 
 // Add a DataValidation to a range of cells

@@ -14,6 +14,7 @@ type Row struct {
 	num          int     // Num hold the positional number of the Row in the Sheet
 	cellCount    int     // The current number of cells
 	cells        []*Cell // the cells
+	cellsStyle   *Style
 }
 
 // SetHeight sets the height of the Row in PostScript points
@@ -54,9 +55,19 @@ func (r *Row) GetOutlineLevel() uint8 {
 // AddCell adds a new Cell to the Row
 func (r *Row) AddCell() *Cell {
 	cell := newCell(r, r.cellCount)
+	if r.cellsStyle != nil {
+		cell.SetStyle(r.cellsStyle)
+	}
 	r.cellCount++
 	r.cells = append(r.cells, cell)
 	return cell
+}
+
+func (r *Row) WithStyle(style *Style, fn func(r *Row)) {
+	prev := r.cellsStyle
+	r.cellsStyle = style
+	fn(r)
+	r.cellsStyle = prev
 }
 
 // AddCellV alias for AddCell().SetValue(value)

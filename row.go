@@ -59,6 +59,11 @@ func (r *Row) AddCell() *Cell {
 	return cell
 }
 
+// AddCellV alias for AddCell().SetValue(value)
+func (r *Row) AddCellV(value interface{}) *Cell {
+	return r.AddCell().SetValue(value)
+}
+
 func (r *Row) makeCellKey(colIdx int) string {
 	return fmt.Sprintf("%s:%06d:%06d", r.Sheet.Name, r.num, colIdx)
 }

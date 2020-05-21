@@ -38,15 +38,17 @@ func NewColForRange(min, max int) *Col {
 // them.  The width is expressed as the number of characters of the
 // maximum digit width of the numbers 0-9 as rendered in the normal
 // style's font.
-func (c *Col) SetWidth(width float64) {
+func (c *Col) SetWidth(width float64) *Col {
 	c.Width = &width
 	custom := true
 	c.CustomWidth = &custom
+
+	return c
 }
 
 // SetType will set the format string of a column based on the type that you want to set it to.
 // This function does not really make a lot of sense.
-func (c *Col) SetType(cellType CellType) {
+func (c *Col) SetType(cellType CellType) *Col {
 	switch cellType {
 	case CellTypeString:
 		c.numFmt = builtInNumFmt[builtInNumFmtIndex_STRING]
@@ -65,6 +67,8 @@ func (c *Col) SetType(cellType CellType) {
 	case CellTypeStringFormula:
 		c.numFmt = builtInNumFmt[builtInNumFmtIndex_STRING]
 	}
+
+	return c
 }
 
 // GetStyle returns the Style associated with a Col
@@ -73,12 +77,14 @@ func (c *Col) GetStyle() *Style {
 }
 
 // SetStyle sets the style of a Col
-func (c *Col) SetStyle(style *Style) {
+func (c *Col) SetStyle(style *Style) *Col {
 	c.style = style
+	return c
 }
 
-func (c *Col) SetOutlineLevel(outlineLevel uint8) {
+func (c *Col) SetOutlineLevel(outlineLevel uint8) *Col {
 	c.OutlineLevel = &outlineLevel
+	return c
 }
 
 // copyToRange is an internal convenience function to make a copy of a

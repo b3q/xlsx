@@ -17,15 +17,17 @@ type Row struct {
 }
 
 // SetHeight sets the height of the Row in PostScript points
-func (r *Row) SetHeight(ht float64) {
+func (r *Row) SetHeight(ht float64) *Row {
 	r.height = ht
 	r.isCustom = true
+	return r
 }
 
 // SetHeightCM sets the height of the Row in centimetres, inherently converting it to PostScript points.
-func (r *Row) SetHeightCM(ht float64) {
+func (r *Row) SetHeightCM(ht float64) *Row {
 	r.height = ht * 28.3464567 // Convert CM to postscript points
 	r.isCustom = true
+	return r
 }
 
 // GetHeight returns the height of the Row in PostScript points.
@@ -34,13 +36,14 @@ func (r *Row) GetHeight() float64 {
 }
 
 // SetOutlineLevel sets the outline level of the Row (used for collapsing rows)
-func (r *Row) SetOutlineLevel(outlineLevel uint8) {
+func (r *Row) SetOutlineLevel(outlineLevel uint8) *Row {
 	r.outlineLevel = outlineLevel
 	if r.Sheet != nil {
 		if r.outlineLevel > r.Sheet.SheetFormat.OutlineLevelRow {
 			r.Sheet.SheetFormat.OutlineLevelRow = outlineLevel
 		}
 	}
+	return r
 }
 
 // GetOutlineLevel returns the outline level of the Row.

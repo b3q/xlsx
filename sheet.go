@@ -233,6 +233,15 @@ func (s *Sheet) SwapRows(first, second int) error {
 		return errors.New("SwapRows: index out of bounds")
 	}
 
+	if s.currentRow != nil {
+		if s.currentRow.num == first ||
+			s.currentRow.num == second {
+			if err := s.cellStore.WriteRow(s.currentRow); err != nil {
+				return err
+			}
+		}
+	}
+
 	return s.cellStore.SwapRows(
 		makeRowKey(s, first),
 		makeRowKey(s, second),
